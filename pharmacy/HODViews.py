@@ -29,11 +29,13 @@ def addStock(request):
         form = StockForm(request.POST, request.FILES)
 
         form.save()
+        messages.success(request, "Medicamento agregado")
+
         return redirect('add_stock')
 
     context = {
         "form": form,
-        "title": "Añadir medicina"
+        "title": "Agregar medicamento"
     }
     return render(request, 'hod_templates/add_stock.html', context)
 
@@ -53,7 +55,7 @@ def manageStock(request):
         "stocks": stocks,
         "expired": ex,
         "expa": eo,
-        "title": "Manage Stocked Drugs"
+        "title": "Gestionar medicamentos"
     }
 
     return render(request, 'hod_templates/manage_stock.html', context)
@@ -66,17 +68,17 @@ def addCategory(request):
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
-                messages.success(request, "Category added Successfully!")
+                messages.success(request, "Categoria agregada")
 
                 return redirect('add_category')
     except:
-        messages.error(request, "Category Not added! Try again")
+        messages.error(request, "No se ha agregado la categoria")
 
         return redirect('add_category')
 
     context = {
         "form": form,
-        "title": "Add a New Drug Category"
+        "title": "Agregar categoria de medicamento"
     }
     return render(request, 'hod_templates/add_category.html', context)
 
@@ -172,17 +174,16 @@ def editStock(request, pk):
                 drugs.quantity = quantity
                 drugs.save()
                 form.save()
-                messages.success(request, 'Receptionist Updated Succefully')
+                messages.success(request, 'Medicamento actualizado')
             except:
-                messages.error(request,
-                               'An Error Was Encounterd Receptionist Not Updated')
+                messages.error(request, 'No se pudo actualizar')
 
     context = {
         "drugs": drugs,
         "form": form,
-        "title": "Edit Stock"
-
+        "title": "Editar medicamento"
     }
+
     return render(request, 'hod_templates/edit_drug.html', context)
 
 
@@ -192,12 +193,12 @@ def deleteDrug(request, pk):
         drugs = Stock.objects.get(id=pk)
         if request.method == 'POST':
             drugs.delete()
-            messages.success(request, "Pharmacist  deleted successfully")
+            messages.success(request, "Medicamento eliminado")
 
             return redirect('manage_stock')
 
-    except:
-        messages.error(request, "Pharmacist aready deleted")
+    except Stock.DoesNotExist:
+        messages.error(request, "Medicamento eliminado")
         return redirect('manage_stock')
 
     return render(request, 'hod_templates/sure_delete.html')
@@ -257,13 +258,8 @@ def reorder_level(request, pk):
 
 def drugDetails(request, pk):
     stocks = Stock.objects.get(id=pk)
-    # prescrip=stocks.prescription_set.all()
-    # stocks=stocks.dispense_set.all()
 
     context = {
         "stocks": stocks,
-        # "prescription":prescrip,
-        # "stocks":stocks
-
     }
     return render(request, 'hod_templates/view_drug.html', context)

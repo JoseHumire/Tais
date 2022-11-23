@@ -8,11 +8,12 @@ from django.db.models.functions import Now
 
 
 class CustomUser(AbstractUser):
-    user_type_data = (
-    (1, "AdminHOD"), (2, "Pharmacist"), (3, "Doctor"), (4, "PharmacyClerk"),
-    (5, "Patients"))
-    user_type = models.CharField(default=1, choices=user_type_data,
-                                 max_length=10)
+    user_type_data = ((1, "AdminHOD"), )
+    user_type = models.CharField(
+        default=1,
+        choices=user_type_data,
+        max_length=10
+    )
 
 
 class AdminHOD(models.Model):
@@ -56,26 +57,29 @@ class ExpiredManager(models.Manager):
 class Stock(models.Model):
     category = models.ForeignKey(Category, null=True, on_delete=models.CASCADE,
                                  blank=True)
-    drug_imprint = models.CharField(max_length=6, blank=True, null=True)
-    drug_name = models.CharField(max_length=50, blank=True, null=True)
-    drug_color = models.CharField(max_length=50, blank=True, null=True)
-    drug_shape = models.CharField(max_length=50, blank=True, null=True)
-    quantity = models.IntegerField(default='0', blank=True, null=True)
+    drug_imprint = models.CharField(max_length=6, blank=True, null=True, verbose_name='codigo')
+    drug_name = models.CharField(max_length=50, blank=True, null=True, verbose_name='nombre')
+    drug_color = models.CharField(max_length=50, blank=True, null=True, verbose_name='color')
+    drug_shape = models.CharField(max_length=50, blank=True, null=True, verbose_name='forma')
+    quantity = models.IntegerField(default='0', blank=True, null=True, verbose_name='cantidad')
     receive_quantity = models.IntegerField(default='0', blank=True, null=True)
     reorder_level = models.IntegerField(default='0', blank=True, null=True)
-    manufacture = models.CharField(max_length=50, blank=True, null=True)
-    last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-    drug_strength = models.CharField(max_length=10, blank=True, null=True)
+    manufacture = models.CharField(max_length=50, blank=True, null=True, verbose_name='fabricante')
+    last_updated = models.DateTimeField(auto_now_add=False, auto_now=True, verbose_name='actualizado')
+    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False, verbose_name='marca de tiempo')
+    drug_strength = models.CharField(max_length=10, blank=True, null=True, verbose_name='potencia')
     valid_from = models.DateTimeField(blank=True, null=True,
-                                      default=timezone.now)
-    valid_to = models.DateTimeField(blank=False, null=True)
-    drug_description = models.TextField(blank=True, max_length=1000, null=True)
-    drug_pic = models.ImageField(default="images2.png", null=True, blank=True)
+                                      default=timezone.now, verbose_name='valido desde')
+    valid_to = models.DateTimeField(blank=False, null=True, verbose_name='valido hasta')
+    drug_description = models.TextField(blank=True, max_length=1000, null=True, verbose_name='descripcion')
+    drug_pic = models.ImageField(default="images2.png", null=True, blank=True, verbose_name='imagen')
     objects = ExpiredManager()
 
     def __str__(self):
         return str(self.drug_name)
+
+    class Meta:
+        verbose_name = 'Medicamento'
 
 
 @receiver(post_save, sender=CustomUser)
