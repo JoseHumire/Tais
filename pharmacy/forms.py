@@ -24,7 +24,7 @@ class ClientForm(forms.Form):
 
 
 class StockForm(forms.ModelForm):
-    valid_to = forms.DateField(label="Expiry Date", widget=DateInput(
+    valid_to = forms.DateField(label="Fecha de expiración", widget=DateInput(
         attrs={"class": "form-control"}))
 
     class Meta:
@@ -48,7 +48,7 @@ class HodForm(ModelForm):
 
 
 class ReceiveStockForm(ModelForm):
-    valid_to = forms.DateField(label="Expiry Date", widget=DateInput(
+    valid_to = forms.DateField(label="Fecha de expiración", widget=DateInput(
         attrs={"class": "form-control"}))
 
     class Meta:

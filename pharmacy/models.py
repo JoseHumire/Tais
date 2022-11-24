@@ -39,7 +39,7 @@ class AdminHOD(models.Model):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=50, blank=False, null=True)
+    name = models.CharField(max_length=50, blank=False, null=True, verbose_name="Categoría")
 
     def __str__(self):
         return str(self.name)
